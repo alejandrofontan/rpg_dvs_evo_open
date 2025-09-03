@@ -22,6 +22,8 @@
 #include "evo_utils/camera.hpp"
 #include "evo_utils/geometry.hpp"
 
+#include <deque>
+
 // #define MAPPING_PERF  ///< to easily measure code for time of execution
 
 namespace depth_from_defocus {
