@@ -2,7 +2,7 @@ project(dvs_tracking)
 cmake_minimum_required(VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
 
 find_package(Boost REQUIRED COMPONENTS system)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -13,9 +13,8 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 
-
-
-
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
 
 SET(CMAKE_BUILD_TYPE RelWithDebInfo) # Release, RelWithDebInfo)
 ADD_DEFINITIONS(
@@ -61,13 +60,15 @@ cs_add_executable(dvs_tracking_ros src/dvs_tracking_ros.cpp)
 target_link_libraries(dvs_tracking_ros ${PROJECT_NAME}
   ${OpenCV_LIBS}
   ${PCL_LIBRARIES}
+  glog::glog gflags
 )
 
 cs_add_library(dvs_tracking_nodelet src/dvs_tracking_nodelet.cpp)
-target_link_libraries(dvs_tracking_nodelet ${PROJECT_NAME})
+target_link_libraries(dvs_tracking_nodelet ${PROJECT_NAME} glog::glog gflags)
 
 
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS})
+

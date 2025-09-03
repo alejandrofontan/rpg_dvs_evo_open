@@ -2,8 +2,9 @@ project(vikit_common)
 cmake_minimum_required(VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
 find_package(OpenCV REQUIRED)
+find_package(glog REQUIRED)
 
 include(SvoSetup)
 
@@ -39,23 +40,24 @@ set(SOURCES
 
 # Create vikit shared library
 cs_add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES} glog::glog)
 ################################################################################
 # Unit tests
 catkin_add_gtest(homography test/test_homography.cpp)
-target_link_libraries(homography gtest ${PROJECT_NAME})
+target_link_libraries(homography gtest ${PROJECT_NAME} glog::glog)
 
 catkin_add_gtest(math_utils test/test_math_utils.cpp)
-target_link_libraries(math_utils gtest ${PROJECT_NAME})
+target_link_libraries(math_utils gtest ${PROJECT_NAME} glog::glog)
 
 ################################################################################
 # Other tests
 cs_add_executable(vikit_test_timer test/test_timer.cpp)
-target_link_libraries(vikit_test_timer ${PROJECT_NAME})
+target_link_libraries(vikit_test_timer ${PROJECT_NAME} glog::glog)
 
 cs_add_executable(vikit_test_common test/test_common.cpp)
-target_link_libraries(vikit_test_common ${PROJECT_NAME})
+target_link_libraries(vikit_test_common ${PROJECT_NAME} glog::glog)
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS})
+

@@ -2,11 +2,16 @@ project(dvs_mapping)
 cmake_minimum_required(VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
+
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
 
 SET(CMAKE_BUILD_TYPE RelWithDebInfo) # Release, RelWithDebInfo
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 ADD_DEFINITIONS(
-    -std=c++11
     -fopenmp
     -w
     -Wfatal-errors
@@ -30,11 +35,11 @@ cs_add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 ################################################################################
 
 cs_add_executable(dvs_mapping_ros src/dvs_mapping_ros.cpp)
-target_link_libraries(dvs_mapping_ros ${PROJECT_NAME})
+target_link_libraries(dvs_mapping_ros ${PROJECT_NAME} glog::glog gflags)
 
 
 cs_add_library(dvs_mapping_nodelet src/dvs_mapping_nodelet.cpp)
-target_link_libraries(dvs_mapping_nodelet ${PROJECT_NAME})
+target_link_libraries(dvs_mapping_nodelet ${PROJECT_NAME} glog::glog gflags)
 
 ################################################################################
 # Tests
@@ -43,9 +48,9 @@ catkin_add_gtest(${PROJECT_NAME}_tests
   test/test_median_filter
   test/test_depth_vector
 )
-target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME} glog::glog gflags)
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS})
 

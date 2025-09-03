@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vikit_solver)
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
+
+find_package(glog REQUIRED)
 
 SET(CMAKE_BUILD_TYPE Release) # Release, RelWithDebInfo
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11")
@@ -14,6 +16,10 @@ cs_add_library(${PROJECT_NAME}
   include/vikit/solver/implementation/mini_least_squares_solver.hpp
   src/robust_cost.cpp
   include/vikit/solver/robust_cost.h
+)
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  glog::glog
 )
 
 ## Declare a cpp executable
@@ -32,4 +38,4 @@ cs_add_library(${PROJECT_NAME}
 # EXPORT #
 ##########
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS})

@@ -2,7 +2,9 @@ project(vikit_cameras)
 cmake_minimum_required (VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
+
+find_package(glog REQUIRED)
 
 include(SvoSetup)
 
@@ -41,7 +43,7 @@ set(SOURCES
   )
 
 cs_add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} yaml-cpp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp glog::glog)
 
 ################################################################################
 # Tests
@@ -49,10 +51,10 @@ target_link_libraries(${PROJECT_NAME} yaml-cpp)
 catkin_add_gtest(${PROJECT_NAME}_tests
   test/test_cameras
 )
-target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME} glog::glog)
 
 ################################################################################
 # Install
 
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS})

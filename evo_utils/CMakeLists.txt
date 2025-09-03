@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(evo_utils)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
+
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
 
 # find_package(OpenCV REQUIRED)
 # include_directories(${OpenCV_INCLUDE_DIRS})
@@ -21,6 +24,11 @@ set(SOURCES
 )
 
 cs_add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  glog::glog
+  gflags
+)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -32,4 +40,4 @@ catkin_python_setup()
 # )
 
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS})

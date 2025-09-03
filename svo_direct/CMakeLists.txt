@@ -2,8 +2,11 @@ project(svo_direct)
 cmake_minimum_required(VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
+
 find_package(OpenCV REQUIRED)
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
 
 include(SvoSetup)
 
@@ -34,9 +37,10 @@ set(SOURCES
   )
 
 cs_add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} glog::glog gflags)
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS})
+
 

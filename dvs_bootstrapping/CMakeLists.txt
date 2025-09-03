@@ -1,8 +1,8 @@
-project(dvs_bootstrapping)
 cmake_minimum_required(VERSION 3.0.2)
+project(dvs_bootstrapping)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
 
 find_package(Boost REQUIRED COMPONENTS system)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -13,9 +13,15 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
+
 SET(CMAKE_BUILD_TYPE RelWithDebInfo) # Release, RelWithDebInfo
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 ADD_DEFINITIONS(
-    -std=c++11
     -Wno-ignored-qualifiers
     -w
 )
@@ -68,6 +74,8 @@ target_link_libraries(dvs_bootstrapping_frontoplanar_ros
   ${PROJECT_NAME}_frontoplanar
   ${OpenCV_LIBS}
   ${PCL_LIBS}
+  glog::glog 
+  gflags
 )
 
 # cs_add_executable(dvs_bootstrapping_harris_ros src/dvs_bootstrapping_harris_ros.cpp)
@@ -82,8 +90,10 @@ target_link_libraries(dvs_bootstrapping_ef_ros
   ${PROJECT_NAME}_ef
   ${OpenCV_LIBS}
   ${Boost_INCLUDE_DIRS}
+  glog::glog 
+  gflags
 )
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS})

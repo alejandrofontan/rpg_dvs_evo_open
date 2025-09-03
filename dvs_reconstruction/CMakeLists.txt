@@ -2,14 +2,20 @@ project(dvs_reconstruction)
 cmake_minimum_required(VERSION 2.8.3)
 
 find_package(catkin_simple REQUIRED)
-catkin_simple(ALL_DEPS_REQUIRED)
+catkin_simple()
 
+find_package(glog REQUIRED)
+find_package(gflags REQUIRED)
 
 SET(CMAKE_BUILD_TYPE RelWithDebInfo) # Release, RelWithDebInfo
-ADD_DEFINITIONS(
-    -std=c++11
-    # -O3
-)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# add_compile_options(-O3)
+# add_compile_options(
+#     -Wfatal-errors
+# )
 
 
 ################################################################################
@@ -33,9 +39,14 @@ target_link_libraries(dvs_reconstruction_ros ${PROJECT_NAME}
   ${OpenCV_LIBS}
   ${PCL_LIBRARIES}
   fftw3 fftw3_threads
+  ${catkin_LIBRARIES}
+  glog::glog
+  gflags
 )
 
 
 ################################################################################
 cs_install()
-cs_export()
+cs_export(
+  INCLUDE_DIRS ${glog_INCLUDE_DIRS} ${gflags_INCLUDE_DIRS}
+)
