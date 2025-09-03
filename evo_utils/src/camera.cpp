@@ -1,4 +1,6 @@
 #include "evo_utils/camera.hpp"
+#include <opencv2/imgproc.hpp>
+#include <opencv2/calib3d.hpp>
 
 namespace evo_utils::camera {
 
