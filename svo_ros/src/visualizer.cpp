@@ -39,6 +39,9 @@
 #include <svo/img_align/sparse_img_align.h>
 #include <svo/reprojector.h>
 
+#include <sensor_msgs/PointCloud2.h>
+
+
 namespace svo {
 
 Visualizer::Visualizer(
@@ -423,7 +426,11 @@ void Visualizer::publishSeedsAsPointcloud(
     }
   }
   VLOG(30) << "Publish pointcloud of size " << pc_->size();
-  pub_pc_.publish(pc_);
+  sensor_msgs::PointCloud2 pc_msg;
+  pcl::toROSMsg(*pc_, pc_msg);
+  pc_msg.header.frame_id = "map";    // adjust to your frame
+  pc_msg.header.stamp = ros::Time::now();
+  pub_pc_.publish(pc_msg);
 }
 
 void Visualizer::publishSeedsUncertainty(const Map::Ptr& map)
@@ -506,7 +513,11 @@ void Visualizer::publishMapRegion(const std::vector<FramePtr>& frames)
       }
     }
     VLOG(100) << "Publish pointcloud of size " << pc_->size();
-    pub_pc_.publish(pc_);
+    sensor_msgs::PointCloud2 pc_msg;
+    pcl::toROSMsg(*pc_, pc_msg);
+    pc_msg.header.frame_id = "map";    // adjust to your frame
+    pc_msg.header.stamp = ros::Time::now();
+    pub_pc_.publish(pc_msg);
   }
 
   if(pub_points_.getNumSubscribers() > 0)
